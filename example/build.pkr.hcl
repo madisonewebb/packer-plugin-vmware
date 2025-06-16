@@ -27,14 +27,6 @@ build {
     source      = "/Users/madison/.ssh/id_ed25519.pub"
     destination = "/home/vagrant/.ssh/authorized_keys"
   }
-  
-  // Set proper permissions on the authorized_keys file
-  provisioner "shell" {
-    inline = [
-      "chmod 600 /home/vagrant/.ssh/authorized_keys",
-      "chown -R vagrant:vagrant /home/vagrant/.ssh"
-    ]
-  }
 
   // Update the system packages
   provisioner "shell" {
