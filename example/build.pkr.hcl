@@ -21,6 +21,14 @@ build {
       "chmod 700 /home/vagrant/.ssh"
     ]
   }
+
+  // Add the Vagrant public key to the authorized_keys file
+  provisioner "shell" {
+    inline = [
+      "curl -fsSL https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub >> /home/vagrant/.ssh/authorized_keys",
+      "chown -R vagrant:vagrant /home/vagrant/.ssh"
+    ]
+  }
   
   // Add your public SSH key to the authorized_keys
   provisioner "file" {
@@ -28,8 +36,16 @@ build {
     destination = "/home/vagrant/.ssh/authorized_keys"
   }
 
-  // Update the system packages
+  // Update the system packages + kernel, then install open-vm-tools
   provisioner "shell" {
-      inline = ["sudo apt-get update", "sudo apt-get upgrade -y"]
+      inline = [
+        "echo 'Updating package lists...'",
+        "sudo apt update",
+        "echo 'Upgrading packages...'",
+        "sudo apt upgrade -y", 
+        "sudo apt full-upgrade -y",
+        "echo 'Installing open-vm-tools...'",
+        "sudo apt install -y open-vm-tools"
+      ]
   }
 }
